@@ -157,7 +157,7 @@ resource "aws_codepipeline" "terraform_pipeline" {
 
       configuration = {
         ConnectionArn = aws_codestarconnections_connection.web-connection.arn
-        FullRepositoryId       = "dche25/vercara_code",
+        FullRepositoryId       = "https://github.com/dche25/vercara_project.git",
         BranchName     = "master",
 
       }
