@@ -1,0 +1,27 @@
+version: 0.2
+
+phases:
+  install:
+    runtime-versions:
+      docker: 20
+    commands:
+      - echo "Installing Terraform"
+      - curl -o terraform.zip https://releases.hashicorp.com/terraform/1.1.0/terraform_1.1.0_linux_amd64.zip
+      - unzip terraform.zip
+      - chmod +x terraform
+      - mv terraform /usr/local/bin/
+
+  build:
+    commands:
+      - echo "Deploying using Terraform"
+      - cd $CODEBUILD_SRC_DIR
+      - cd tf-code
+      - terraform init
+      - terraform apply -var=aws_account=$AWS_ACCOUNT_ID -auto-approve
+      - echo "Deployment completed"
+
+
+
+artifacts:
+  files:
+    - '**/*'
