@@ -79,10 +79,10 @@ resource "aws_ecs_task_definition" "web_task" {
   cpu                      = "256"
   memory                   = "512"
   execution_role_arn       = aws_iam_role.ecs_execution_role.arn
-
   container_definitions = jsonencode([{
     name  = "web-container"
-    image = aws_ecr_repository.my_ecr_repository.repository_url
+    image = "${aws_ecr_repository.my_ecr_repository.repository_url}:latest"
+
     portMappings = [{
       containerPort = 80
       hostPort      = 80
@@ -93,7 +93,9 @@ resource "aws_ecs_task_definition" "web_task" {
       "awslogs-group"         = aws_cloudwatch_log_group.web_task_logs.name
       "awslogs-region"        = "us-east-1",
       "awslogs-stream-prefix" = "ecs",
-    }
+    },
+
+
   }
   }])
 
@@ -106,6 +108,7 @@ resource "aws_ecs_service" "web_service" {
   cluster         = aws_ecs_cluster.web_cluster.id
   task_definition = aws_ecs_task_definition.web_task.arn
   launch_type     = "FARGATE"
+  desired_count = "1"
 
   network_configuration {
     subnets         = [aws_subnet.web_public_subnet.id, aws_subnet.web_private_subnet.id]
@@ -117,7 +120,7 @@ resource "aws_ecs_service" "web_service" {
     container_port   = 80
   }
 
-  depends_on = [aws_lb.web_lb, aws_lb_target_group.web_tg]
+  depends_on = [aws_ecs_task_definition.web_task, aws_lb.web_lb, aws_lb_target_group.web_tg]
 }
 
 # Load Balancer Target Group
@@ -139,7 +142,7 @@ resource "aws_lb_listener" "web_listener" {
     type             = "forward"
     target_group_arn = aws_lb_target_group.web_tg.arn
   }
-  depends_on = [aws_lb.web_lb, aws_ecs_task_definition.web_task]
+  depends_on = [aws_lb.web_lb]
 }
 
 # Auto-scaling
