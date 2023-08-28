@@ -36,20 +36,20 @@ resource "aws_iam_role" "codebuild_role" {
       Version = "2012-10-17",
       Statement = [
         {
-      "Effect": "Allow",
-      "Action": [
-        "ecs:*",
-        "ecr:*",
-        "ec2:*",
-        "iam:*",
-        "logs:*",
-        "s3:*",
-        "elasticloadbalancing:*",
-        "cloudwatch:*",
-        "application-autoscaling:*"
-      ],
-      "Resource": "*"
-    }
+          "Effect" : "Allow",
+          "Action" : [
+            "ecs:*",
+            "ecr:*",
+            "ec2:*",
+            "iam:*",
+            "logs:*",
+            "s3:*",
+            "elasticloadbalancing:*",
+            "cloudwatch:*",
+            "application-autoscaling:*"
+          ],
+          "Resource" : "*"
+        }
       ]
     })
   }
@@ -65,21 +65,21 @@ resource "aws_codebuild_project" "terraform_build" {
   build_timeout = "30"
 
   source {
-    type = "CODEPIPELINE"
+    type      = "CODEPIPELINE"
     buildspec = "buildspec.yml"
   }
 
   artifacts {
-    type = "CODEPIPELINE"
+    type           = "CODEPIPELINE"
     namespace_type = "BUILD_ID"
-    packaging = "ZIP"
+    packaging      = "ZIP"
   }
   environment {
     compute_type                = "BUILD_GENERAL1_SMALL"
     image                       = "aws/codebuild/amazonlinux2-x86_64-standard:4.0"
     type                        = "LINUX_CONTAINER"
     image_pull_credentials_type = "CODEBUILD"
-    privileged_mode = true
+    privileged_mode             = true
 
     environment_variable {
       name  = "AWS_ACCOUNT_ID"
@@ -156,9 +156,9 @@ resource "aws_codepipeline" "terraform_pipeline" {
       output_artifacts = ["source_output"]
 
       configuration = {
-        ConnectionArn = aws_codestarconnections_connection.web-connection.arn
-        FullRepositoryId       = "dche25/vercara_project",
-        BranchName     = "master",
+        ConnectionArn    = aws_codestarconnections_connection.web-connection.arn
+        FullRepositoryId = "dche25/vercara_project",
+        BranchName       = "master",
 
       }
     }
