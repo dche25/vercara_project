@@ -18,6 +18,7 @@ phases:
       - cd tf-code
       - terraform init
       - terraform apply -var=aws_account=$AWS_ACCOUNT_ID -auto-approve
+       - aws ecs update-service --region us-east-1 --cluster web-cluster --service web-service --force-new-deployment
       - echo "Deployment completed"
 
 
