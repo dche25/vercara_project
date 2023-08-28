@@ -2,7 +2,7 @@
 
 ## Overview
 
-This guide explains how to deploy a web application on AWS ECS using Terraform for the Vercara test project. This will set up the infrastructure, deploy a Dockerized web application, and implement auto-scaling and CI/CD.
+This guide explains how to deploy a web application on AWS ECS using Terraform. This will set up the infrastructure, deploy a Dockerized web application, and implement auto-scaling and CI/CD.
 
 ## Pre-requisites
 
